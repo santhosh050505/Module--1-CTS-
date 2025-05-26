@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Event Portal</title>
+    <!-- Bootstrap 5 CDN for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- jQuery CDN for Exercise 14, loaded before Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+        /* Existing design styles */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+        }
+        .container {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            background: linear-gradient(to right, #007bff, #00d4ff);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .event-card {
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .event-card .card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .event-card .card-body {
+            padding: 1.5rem;
+        }
+        .event-card.music .card-header {
+            background: #ff6b6b;
+            color: white;
+        }
+        .event-card.workshop .card-header {
+            background: #4ecdc4;
+            color: white;
+        }
+        .event-card.art .card-header {
+            background: #45b7d1;
+            color: white;
+        }
+        .btn-primary {
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            background: #007bff;
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 0.9rem;
+        }
+        .loading {
+            display: none;
+            margin: 2rem 0;
+        }
+        /* New styles for Back to Top button */
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: none;
+            background: linear-gradient(to right, #007bff, #00d4ff);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.2s;
+            z-index: 1000;
+        }
+        #back-to-top:hover {
+            background: linear-gradient(to right, #0056b3, #00aaff);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container -->
+    <div class="container my-4">
+        <h1>Community Event Portal</h1>
+        
+        <!-- Exercise 7: DOM Manipulation - Event display area -->
+        <div id="event-list" class="row"></div>
+        
+        <!-- Exercise 8: Event Handling - Filter by category -->
+        <div class="mb-3">
+            <label for="category-filter" class="form-label">Filter by Category</label>
+            <select id="category-filter" class="form-select">
+                <option value="all">All</option>
+                <option value="Music">Music</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Art">Art</option>
+            </select>
+        </div>
+
+        <!-- Exercise 8: Event Handling - Search by name -->
+        <div class="mb-3">
+            <label for="search-input" class="form-label">Search by Event Name</label>
+            <input type="text" id="search-input" class="form-control" placeholder="Enter event name">
+        </div>
+
+        <!-- Exercise 11: Working with Forms - Registration form -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h2>Register for an Event</h2>
+                <form id="registration-form">
+                    <div class="mb-3">
+                        <label for="user-name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="user-name" name="name" required>
+                        <div id="name-error" class="error"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user-email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="user-email" name="email" required>
+                        <div id="email-error" class="error"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="event-select" class="form-label">Select Event</label>
+                        <select id="event-select" class="form-select" name="event" required>
+                            <option value="">Select an event</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <div id="form-message" class="mt-2"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Exercise 9: Async JS - Loading spinner -->
+        <div id="loading" class="loading text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Pop-up modal for registration feedback -->
+        <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="registrationModalLabel">Registration Status</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal-message"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for register button input form -->
+        <div class="modal fade" id="registerPromptModal" tabindex="-1" aria-labelledby="registerPromptModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="registerPromptModalLabel">Register for Event</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="prompt-registration-form">
+                            <div class="mb-3">
+                                <label for="prompt-user-name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="prompt-user-name" name="name" required>
+                                <div id="prompt-name-error" class="error"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="prompt-user-email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="prompt-user-email" name="email" required>
+                                <div id="prompt-email-error" class="error"></div>
+                            </div>
+                            <input type="hidden" id="prompt-event-name" name="event">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top button -->
+    <button id="back-to-top" title="Back to Top">↑</button>
+
+    <!-- Exercise 1: JavaScript Basics & Setup - Include script and basic operations -->
+    <script>
+        // Wrap script in DOMContentLoaded to ensure DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Exercise 1: Log welcome message and show alert on load
+            console.log("Welcome to the Community Event Portal");
+            window.addEventListener('load', () => {
+                console.log("Page load event triggered");
+                alert("Page fully loaded!");
+            });
+
+            // Exercise 5: Objects and Prototypes - Event class
+            class Event {
+                constructor(name, date, category, seats) {
+                    this.name = name;
+                    this.date = new Date(date);
+                    this.category = category;
+                    this.seats = seats;
+                }
+                // Add checkAvailability to prototype
+                checkAvailability() {
+                    return this.seats > 0 && this.date > new Date();
+                }
+            }
+
+            // Exercise 6: Arrays and Methods - Expanded mock event data
+            const events = [
+                new Event("Summer Music Fest", "2025-06-10", "Music", 50),
+                new Event("Baking Workshop", "2025-07-15", "Workshop", 20),
+                new Event("Art Exhibition", "2025-05-30", "Art", 0),
+                new Event("Jazz Night", "2025-04-20", "Music", 30), // Past event
+                new Event("Community Choir Concert", "2025-08-05", "Music", 40),
+                new Event("Pottery Masterclass", "2025-07-25", "Workshop", 15),
+                new Event("Street Art Tour", "2025-06-20", "Art", 25),
+                new Event("Local Band Showcase", "2025-09-10", "Music", 60)
+            ];
+
+            // Exercise 5: Objects and Prototypes - Log object entries
+            events.forEach(event => {
+                console.log("Event properties:", Object.entries(event));
+            });
+
+            // Exercise 4: Functions, Scope, Closures - Registration tracker with closure
+            const registrationTracker = (() => {
+                let totalRegistrations = {};
+                return {
+                    register: (category) => {
+                        totalRegistrations[category] = (totalRegistrations[category] || 0) + 1;
+                        return totalRegistrations[category];
+                    },
+                    getTotal: (category) => totalRegistrations[category] || 0
+                };
+            })();
+
+            // Exercise 4: Functions - Add event with default parameters
+            const addEvent = (name, date, category = "General", seats = 10) => {
+                try {
+                    events.push(new Event(name, date, category, seats));
+                    renderEvents(events);
+                    console.log(`Added event: ${name}`);
+                } catch (error) {
+                    console.error("Error adding event:", error);
+                }
+            };
+
+            // Exercise 4: Functions - Register user
+            const registerUser = (eventName, userName, userEmail) => {
+                const event = events.find(e => e.name === eventName);
+                if (!event) throw new Error("Event not found");
+                if (!event.checkAvailability()) throw new Error("No seats available or event is past");
+                event.seats--; // Exercise 2: Use --
+                registrationTracker.register(event.category);
+                return `Registered ${userName} for ${eventName}`;
+            };
+
+            // Exercise 4: Functions - Filter events by category with callback
+            const filterEventsByCategory = (events, category, callback) => {
+                try {
+                    const filtered = category === "all" ? events : events.filter(e => e.category === category);
+                    return callback(filtered);
+                } catch (error) {
+                    console.error("Error filtering events:", error);
+                    return callback([]);
+                }
+            };
+
+            // Exercise 6: Arrays and Methods - Filter music events
+            const getMusicEvents = () => events.filter(e => e.category === "Music");
+
+            // Exercise 6: Arrays and Methods - Format event cards
+            const formatEventCards = (events) => events.map(e => `${e.category}: ${e.name}`);
+
+            // Exercise 7: DOM Manipulation - Render events
+            const renderEvents = (eventList) => {
+                const eventListDiv = document.querySelector("#event-list");
+                if (!eventListDiv) {
+                    console.error("Event list container not found");
+                    return;
+                }
+                eventListDiv.innerHTML = "";
+                // Exercise 3: Conditionals, Loops - Only show valid events
+                eventList.forEach(event => {
+                    if (event.checkAvailability()) {
+                        const card = document.createElement("div");
+                        card.className = `col-md-4 event-card ${event.category.toLowerCase()}`;
+                        card.innerHTML = `
+                            <div class="card">
+                                <div class="card-header">${event.category}</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">${event.name}</h5>
+                                    <p class="card-text">Date: ${event.date.toDateString()}</p>
+                                    <p class="card-text">Seats: ${event.seats}</p>
+                                    <button class="btn btn-primary register-btn" data-event="${event.name}">Register</button>
+                                </div>
+                            </div>
+                        `;
+                        eventListDiv.appendChild(card);
+                    }
+                });
+
+                // Exercise 7: DOM Manipulation - Populate event select
+                const eventSelect = document.querySelector("#event-select");
+                if (!eventSelect) {
+                    console.error("Event select element not found");
+                    return;
+                }
+                eventSelect.innerHTML = '<option value="">Select an event</option>';
+                eventList.forEach(event => {
+                    if (event.checkAvailability()) {
+                        const option = document.createElement("option");
+                        option.value = event.name;
+                        option.textContent = event.name;
+                        eventSelect.appendChild(option);
+                    }
+                });
+
+                // Exercise 6: Log formatted cards
+                console.log("Formatted event cards:", formatEventCards(eventList));
+            };
+
+            // Exercise 9: Async JS - Mock API fetch with Promise
+            const fetchEvents = () => {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        if (events.length > 0) {
+                            resolve([...events]); // Exercise 10: Spread operator
+                        } else {
+                            reject("No events available");
+                        }
+                    }, 1000); // Simulate delay
+                });
+            };
+
+            // Exercise 9: Async JS - Load events with then/catch
+            const loadEventsWithPromise = () => {
+                const loading = document.querySelector("#loading");
+                if (!loading) {
+                    console.error("Loading spinner not found");
+                    return;
+                }
+                loading.style.display = "block";
+                fetchEvents()
+                    .then(fetchedEvents => {
+                        renderEvents(fetchedEvents);
+                        loading.style.display = "none";
+                    })
+                    .catch(error => {
+                        console.error("Fetch error:", error);
+                        loading.style.display = "none";
+                    });
+            };
+
+            // Exercise 9: Async/Await - Load events with spinner
+            const loadEvents = async () => {
+                const loading = document.querySelector("#loading");
+                if (!loading) {
+                    console.error("Loading spinner not found");
+                    return;
+                }
+                loading.style.display = "block";
+                try {
+                    const fetchedEvents = await fetchEvents();
+                    renderEvents(fetchedEvents);
+                } catch (error) {
+                    console.error("Error fetching events:", error);
+                } finally {
+                    loading.style.display = "none";
+                }
+            };
+
+            // Exercise 12: AJAX & Fetch API - Mock POST registration
+            const postRegistration = (data) => {
+                return new Promise((resolve, reject) => {
+                    // Exercise 13: Debugging - Log payload
+                    console.log("Submitting registration:", data);
+                    setTimeout(() => {
+                        if (data.name && data.email && data.event) {
+                            resolve("Registration successful");
+                        } else {
+                            reject("Invalid registration data");
+                        }
+                    }, 1000); // Simulate delay
+                });
+            };
+
+            // Exercise 2: Syntax, Data Types, Operators - Event info with template literals
+            const getEventInfo = (event) => {
+                const { name, date, seats } = event; // Exercise 10: Destructuring
+                let availableSeats = seats;
+                availableSeats--; // Exercise 2: Use --
+                return `${name} on ${date.toDateString()} has ${availableSeats} seats left`;
+            };
+
+            // Exercise 3: Conditionals, Loops, Error Handling - Register with error handling
+            const handleRegistration = (eventName, userName, userEmail) => {
+                try {
+                    const message = registerUser(eventName, userName, userEmail);
+                    renderEvents(events);
+                    return message;
+                } catch (error) {
+                    return `Error: ${error.message}`;
+                }
+            };
+
+            // Helper function to show modal
+            const showModal = (message) => {
+                const modalElement = document.querySelector("#registrationModal");
+                const modalMessage = document.querySelector("#modal-message");
+                if (!modalElement || !modalMessage) {
+                    console.error("Modal elements not found:", { modalElement, modalMessage });
+                    alert(message); // Fallback to alert
+                    return;
+                }
+                modalMessage.textContent = message;
+                try {
+                    const modal = new bootstrap.Modal(modalElement, { keyboard: true });
+                    modal.show();
+                } catch (error) {
+                    console.error("Error showing modal:", error.message, error.stack);
+                    alert(message); // Fallback to alert
+                }
+            };
+
+            // Exercise 8: Event Handling - Register button clicks
+            document.addEventListener("click", (e) => {
+                if (e.target.classList.contains("register-btn")) {
+                    const eventName = e.target.dataset.event;
+                    if (!eventName) {
+                        console.error("Event name not found in dataset");
+                        showModal("Error: Unable to identify event");
+                        return;
+                    }
+                    // Open prompt modal
+                    const promptModalElement = document.querySelector("#registerPromptModal");
+                    const promptEventName = document.querySelector("#prompt-event-name");
+                    if (!promptModalElement || !promptEventName) {
+                        console.error("Prompt modal elements not found");
+                        showModal("Error: Registration form unavailable");
+                        return;
+                    }
+                    promptEventName.value = eventName;
+                    try {
+                        const promptModal = new bootstrap.Modal(promptModalElement, { keyboard: true });
+                        promptModal.show();
+                    } catch (error) {
+                        console.error("Error showing prompt modal:", error.message, error.stack);
+                        alert("Please use the main registration form");
+                    }
+                }
+            });
+
+            // Handle prompt modal form submission
+            const promptRegistrationForm = document.querySelector("#prompt-registration-form");
+            if (promptRegistrationForm) {
+                promptRegistrationForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const form = e.target;
+                    const name = form.elements["name"].value;
+                    const email = form.elements["email"].value;
+                    const eventName = form.elements["event"].value;
+                    const nameError = document.querySelector("#prompt-name-error");
+                    const emailError = document.querySelector("#prompt-email-error");
+
+                    if (!nameError || !emailError) {
+                        console.error("Prompt form feedback elements not found");
+                        showModal("Error: Form elements missing");
+                        return;
+                    }
+
+                    nameError.textContent = name ? "" : "Name is required";
+                    emailError.textContent = email ? "" : "Email is required";
+                    if (!name || !email || !eventName) {
+                        showModal("Error: Please fill all fields");
+                        return;
+                    }
+
+                    const message = handleRegistration(eventName, name, email);
+                    showModal(message);
+                    // Close prompt modal
+                    const promptModal = bootstrap.Modal.getInstance(document.querySelector("#registerPromptModal"));
+                    if (promptModal) {
+                        promptModal.hide();
+                    }
+                });
+            } else {
+                console.error("Prompt registration form not found");
+            }
+
+            // Exercise 8: Event Handling - Category filter
+            const categoryFilter = document.querySelector("#category-filter");
+            if (categoryFilter) {
+                categoryFilter.addEventListener("change", (e) => {
+                    const category = e.target.value;
+                    filterEventsByCategory(events, category, (filtered) => {
+                        renderEvents(filtered);
+                    });
+                });
+            } else {
+                console.error("Category filter element not found");
+            }
+
+            // Exercise 8: Event Handling - Search by name
+            const searchInput = document.querySelector("#search-input");
+            if (searchInput) {
+                searchInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        const searchTerm = e.target.value.toLowerCase();
+                        const filtered = cloneEvents().filter(e => e.name.toLowerCase().includes(searchTerm)); // Exercise 10: Spread operator
+                        renderEvents(filtered);
+                    }
+                });
+            } else {
+                console.error("Search input element not found");
+            }
+
+            // Exercise 11: Working with Forms - Main registration form submission
+            const registrationForm = document.querySelector("#registration-form");
+            if (registrationForm) {
+                registrationForm.addEventListener("submit", async (e) => {
+                    e.preventDefault(); // Exercise 11: Prevent default
+                    const form = e.target;
+                    const name = form.elements["name"].value; // Exercise 11: Use form.elements
+                    const email = form.elements["email"].value;
+                    const eventName = form.elements["event"].value;
+                    const nameError = document.querySelector("#name-error");
+                    const emailError = document.querySelector("#email-error");
+                    const formMessage = document.querySelector("#form-message");
+
+                    if (!nameError || !emailError || !formMessage) {
+                        console.error("Form feedback elements not found");
+                        showModal("Error: Form elements missing");
+                        return;
+                    }
+
+                    // Exercise 11: Validate inputs
+                    nameError.textContent = name ? "" : "Name is required";
+                    emailError.textContent = email ? "" : "Email is required";
+                    if (!name || !email || !eventName) {
+                        formMessage.textContent = "Please fill all fields";
+                        formMessage.style.color = "red";
+                        showModal("Error: Please fill all fields");
+                        return;
+                    }
+
+                    // Exercise 12: POST registration
+                    try {
+                        const response = await postRegistration({ name, email, event: eventName });
+                        formMessage.textContent = response;
+                        formMessage.style.color = "green";
+                        handleRegistration(eventName, name, email);
+                        showModal(response);
+                    } catch (error) {
+                        formMessage.textContent = error;
+                        formMessage.style.color = "red";
+                        showModal(error);
+                    }
+                });
+            } else {
+                console.error("Registration form not found");
+            }
+
+            // Exercise 10: Modern JS - Spread operator for cloning
+            const cloneEvents = () => [...events];
+
+            // Back to Top button functionality
+            const backToTopBtn = document.querySelector("#back-to-top");
+            if (backToTopBtn) {
+                window.addEventListener("scroll", () => {
+                    if (window.scrollY > 300) {
+                        backToTopBtn.style.display = "block";
+                    } else {
+                        backToTopBtn.style.display = "none";
+                    }
+                });
+
+                backToTopBtn.addEventListener("click", () => {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                });
+            } else {
+                console.error("Back to Top button not found");
+            }
+
+            // Exercise 14: jQuery - Handle clicks and animations
+            $(document).ready(() => {
+                console.log("jQuery loaded and ready");
+                $(".register-btn").click(function () {
+                    $(this).closest(".card").fadeOut(500).fadeIn(500);
+                });
+                // Benefit of frameworks: React/Vue provide component-based architecture, simplifying state management and UI updates.
+            });
+
+            // Exercise 13: Debugging - Log initialization and music events
+            console.log("Initializing event portal");
+            console.log("Music events:", getMusicEvents());
+            loadEventsWithPromise(); // Start with Promise-based fetch
+            loadEvents(); // Also demonstrate async/await
+        });
+    </script>
+</body>
+</html>

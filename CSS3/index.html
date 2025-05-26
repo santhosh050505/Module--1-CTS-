@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Community Event Portal - CSS3 Exercises</title>
+    <!-- Exercise 5: Import Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Embedded style for Exercise 1 -->
+    <style>
+        body {
+            background-color: #f0f4f8; /* Fallback color for Exercise 4 */
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        body.dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+    </style>
+    <!-- External stylesheet (simulated in <style> tag for single artifact) -->
+    <style>
+        /* Exercise 1 & 2: CSS in external stylesheet format with comments and indentation */
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Particle background overlay */
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-50vh); opacity: 0.2; }
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 6s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 8s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 1s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 3s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 5s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 7s; }
+
+        body.dark-mode .particle {
+            background: rgba(144, 205, 244, 0.3);
+        }
+
+        /* Body styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('https://source.unsplash.com/1600x900/?community'); /* Exercise 4 */
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body.dark-mode {
+            background-image: url('https://source.unsplash.com/1600x900/?night');
+        }
+
+        /* Dark mode toggle with icon */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(to right, #4299e1, #63b3ed);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dark-mode-toggle::before {
+            content: '☀️';
+            font-size: 1rem;
+        }
+
+        body.dark-mode .dark-mode-toggle::before {
+            content: '🌙';
+        }
+
+        .dark-mode-toggle:hover {
+            background: linear-gradient(to right, #2b6cb0, #4299e1);
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background: linear-gradient(to right, #e53e3e, #f56565);
+        }
+
+        /* Header styles */
+        #mainHeader {
+            background: linear-gradient(135deg, #2b6cb0, #90cdf4); /* Exercise 4 */
+            color: white;
+            padding: 2.5rem;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 5s infinite alternate;
+        }
+
+        @keyframes gradientShift {
+            0% { background: linear-gradient(135deg, #2b6cb0, #90cdf4); }
+            100% { background: linear-gradient(135deg, #90cdf4, #2b6cb0); }
+        }
+
+        #mainHeader::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+
+        body.dark-mode #mainHeader {
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+        }
+
+        /* Element selector for h2 */
+        h2 {
+            color: #2d3748;
+            font-size: 2rem;
+            font-weight: 600;
+            text-transform: uppercase; /* Exercise 5 */
+            letter-spacing: 1.5px; /* Exercise 5 */
+            border-bottom: 3px solid #63b3ed;
+            padding-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        h2:hover {
+            transform: scale(1.02);
+        }
+
+        body.dark-mode h2 {
+            color: #e2e8f0;
+            border-bottom-color: #90cdf4;
+        }
+
+        /* Grouping selector for h3 and p */
+        h3, p {
+            color: rgba(45, 55, 72, 0.9); /* Exercise 4 */
+            line-height: 1.8; /* Exercise 5 */
+        }
+
+        p {
+            font-style: italic; /* Exercise 5 */
+        }
+
+        body.dark-mode h3,
+        body.dark-mode p {
+            color: rgba(226, 232, 240, 0.9);
+        }
+
+        /* Navigation styles */
+        nav ul {
+            list-style-type: none; /* Exercise 6 */
+            list-style-position: inside; /* Exercise 6 */
+            display: flex;
+            justify-content: center; /* Exercise 10: Flexbox */
+            background: linear-gradient(to right, #2d3748, #4a5568);
+            padding: 1.2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode nav ul {
+            background: linear-gradient(to right, #1a202c, #2d3748);
+        }
+
+        nav ul li {
+            margin: 0 2rem; /* Exercise 6 */
+            position: relative;
+        }
+
+        nav ul li a:link,
+        nav ul li a:visited {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 1.1rem;
+            transition: color 0.3s ease, transform 0.3s ease; /* Exercise 6 */
+        }
+
+        nav ul li a:hover,
+        nav ul li a:active {
+            color: #63b3ed; /* Exercise 6 */
+            transform: scale(1.1) translateY(-2px);
+            animation: bounce 0.3s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1.1) translateY(0); }
+            50% { transform: scale(1.1) translateY(-5px); }
+        }
+
+        nav ul li a:hover::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #63b3ed;
+            box-shadow: 0 0 10px #63b3ed;
+            animation: underline 0.3s forwards;
+        }
+
+        @keyframes underline {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        body.dark-mode nav ul li a:hover,
+        body.dark-mode nav ul li a:active {
+            color: #90cdf4;
+        }
+
+        body.dark-mode nav ul li a:hover::after {
+            background: #90cdf4;
+            box-shadow: 0 0 10px #90cdf4;
+        }
+
+        /* Event card styles with 3D tilt effect */
+        .eventCard {
+            background: rgba(255, 255, 255, 0.2); /* Glassmorphism */
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1); /* Exercise 8 */
+            padding: 1.5rem; /* Exercise 8 */
+            margin: 1.5rem 0; /* Exercise 8 */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .eventCard::before {
+            content: '🎉';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            opacity: 0.3;
+        }
+
+        .eventCard:hover {
+            border: 2px solid #63b3ed;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: rotateX(5deg) rotateY(5deg);
+        }
+
+        body.dark-mode .eventCard {
+            background: rgba(45, 55, 72, 0.2);
+            border: 2px solid rgba(226, 232, 240, 0.1);
+        }
+
+        body.dark-mode .eventCard:hover {
+            border: 2px solid #90cdf4;
+        }
+
+        /* Form styles with glowing border */
+        .form-group {
+            position: relative;
+            margin-top: 2rem;
+        }
+
+        form input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1rem;
+        }
+
+        form input:focus {
+            outline: 3px solid #63b3ed; /* Exercise 8 */
+            outline-offset: 2px;
+            border-color: #63b3ed;
+            box-shadow: 0 0 10px #63b3ed;
+        }
+
+        form input:not(:placeholder-shown) + label,
+        form input:focus + label {
+            top: -10px;
+            left: 10px;
+            font-size: 0.8rem;
+            color: #63b3ed;
+            background: #ffffff;
+            padding: 0 5px;
+        }
+
+        form label {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            color: #718096;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        form button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(to right, #4299e1, #63b3ed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        form button::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+            transition: transform 0.5s ease;
+        }
+
+        form button:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        form button:hover {
+            background: linear-gradient(to right, #2b6cb0, #4299e1);
+            transform: scale(1.05);
+        }
+
+        body.dark-mode form input {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+
+        body.dark-mode form input:focus {
+            box-shadow: 0 0 10px #90cdf4;
+        }
+
+        body.dark-mode form input:not(:placeholder-shown) + label,
+        body.dark-mode form input:focus + label {
+            color: #90cdf4;
+            background: #2d3748;
+        }
+
+        body.dark-mode form button {
+            background: linear-gradient(to right, #90cdf4, #63b3ed);
+        }
+
+        /* Visibility comparison */
+        .hidden-visibility {
+            visibility: hidden; /* Exercise 8 */
+        }
+
+        .hidden-display {
+            display: none; /* Exercise 8 */
+        }
+
+        /* News section with fade-in animation */
+        .news-section {
+            column-count: 2; /* Exercise 9 */
+            column-gap: 30px; /* Exercise 9 */
+            column-rule: 1px solid gray; /* Exercise 9 */
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(247, 250, 252, 0.8), rgba(237, 242, 247, 0.8));
+            background-attachment: fixed;
+            background-position: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .news-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.dark-mode .news-section {
+            background: linear-gradient(135deg, rgba(45, 55, 72, 0.8), rgba(74, 85, 104, 0.8));
+            column-rule: 1px solid #4a5568;
+        }
+
+        /* Table styles with shadow animation */
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Exercise 7 */
+            margin: 2rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #e2e8f0; /* Exercise 7 */
+            padding: 1rem; /* Exercise 7 */
+            text-align: center; /* Exercise 7 */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        th {
+            background: linear-gradient(to right, #2d3748, #4a5568); /* Exercise 7 */
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        tr:nth-child(even) {
+            background-color: #e6f0fa; /* Exercise 7: Zebra striping */
+        }
+
+        tr:hover {
+            background-color: #d6e6fa;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode th {
+            background: linear-gradient(to right, #1a202c, #2d3748);
+        }
+
+        body.dark-mode tr:nth-child(even) {
+            background-color: #2d3748;
+        }
+
+        body.dark-mode tr:hover {
+            background-color: #4a5568;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: background 0.5s ease;
+            min-height: 80vh; /* Exercise 10: Added vh */
+        }
+
+        body.dark-mode .container {
+            background: rgba(45, 55, 72, 0.97);
+        }
+
+        /* Footer with wave animation */
+        footer {
+            position: relative;
+            background: #2b6cb0;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46C150,90 350,90 500,46C650,2 850,2 1000,46C1150,90 1200,60 1200,60V0H0Z" fill="rgba(255,255,255,0.3)"/></svg>');
+            background-size: cover;
+            animation: wave 10s infinite linear;
+        }
+
+        @keyframes wave {
+            0% { background-position: 0 0; }
+            100% { background-position: 1200px 0; }
+        }
+
+        body.dark-mode footer {
+            background: #1a202c;
+        }
+
+        /* Responsive design with media queries */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column; /* Exercise 10 */
+                align-items: center;
+            }
+
+            nav ul li {
+                margin: 0.75rem 0;
+            }
+
+            h2 {
+                font-size: 5vw; /* Exercise 10 */
+            }
+
+            .eventCard {
+                padding: 1rem;
+            }
+
+            .news-section {
+                column-count: 1; /* Exercise 10 */
+            }
+
+            form {
+                flex-direction: column;
+            }
+
+            form input,
+            form button {
+                width: 100%;
+            }
+
+            .dark-mode-toggle {
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle background -->
+    <div class="particle-bg">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Dark mode toggle -->
+    <button class="dark-mode-toggle" onclick="document.body.classList.toggle('dark-mode')">Toggle Mode</button>
+
+    <div class="container">
+        <!-- Exercise 1: Inline style on heading -->
+        <h1 id="mainHeader" style="color: #ff0000;">Local Community Event Portal</h1>
+
+        <!-- Navigation -->
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#news">News</a></li>
+                <li><a href="#admin">Admin</a></li>
+            </ul>
+        </nav>
+
+        <!-- Events Section -->
+        <section>
+            <h2>Upcoming Events</h2>
+            <div class="eventCard">
+                <h3>Spring Festival</h3>
+                <p>Join us for a day of music, food, and fun on June 5, 2025.</p>
+            </div>
+            <div class="eventCard">
+                <h3>Art Workshop</h3>
+                <p>Learn painting techniques on June 12, 2025.</p>
+            </div>
+        </section>
+
+        <!-- News Section -->
+        <section>
+            <h2>Community News</h2>
+            <div class="news-section">
+                <p>The annual community cleanup event was a great success! Over 100 volunteers participated in cleaning up the local park, planting new trees, and painting benches. The event fostered a strong sense of unity among residents. Next month, we plan to host a recycling workshop to educate families on sustainable living. Stay tuned for more details on this initiative and how you can get involved in making our community greener.</p>
+            </div>
+        </section>
+
+        <!-- Form Section -->
+        <section>
+            <h2>Join Our Newsletter</h2>
+            <form>
+                <div class="form-group">
+                    <input type="email" id="emailInput" placeholder=" " required>
+                    <label for="emailInput">Enter your email</label>
+                </div>
+                <button type="submit">Subscribe</button>
+            </form>
+            <!-- Exercise 8: Visibility comparison -->
+            <p class="hidden-visibility">This text is hidden with visibility: hidden (still takes space).</p>
+            <p class="hidden-display">This text is hidden with display: none (no space).</p>
+        </section>
+
+        <!-- Admin Table -->
+        <section>
+            <h2>Event Admin Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Participants</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Spring Festival</td>
+                        <td>June 5, 2025</td>
+                        <td>120</td>
+                    </tr>
+                    <tr>
+                        <td>Art Workshop</td>
+                        <td>June 12, 2025</td>
+                        <td>30</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="wave"></div>
+        <p>&copy; 2025 Local Community Event Portal. All rights reserved.</p>
+    </footer>
+
+    <!-- Exercise 11: Debugging Instructions -->
+    <!-- Use Chrome DevTools to:
+       - Simulate screen sizes with Device Toolbar
+       - Inspect styles on .eventCard and adjust padding/margin
+       - Check Network tab to ensure styles.css (simulated here) loads -->
+
+    <!-- JavaScript for fade-in animation on scroll -->
+    <script>
+        const newsSection = document.querySelector('.news-section');
+        window.addEventListener('scroll', () => {
+            const rect = newsSection.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 0.8) {
+                newsSection.classList.add('visible');
+            }
+        });
+    </script>
+</body>
+</html>
